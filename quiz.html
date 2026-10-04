@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz · Oficina das Frases · Português 7º</title>
+<style>
+  :root{
+    --grafite:#12161d; --grafite2:#1b212c; --aco:#2a3342; --aco2:#39465a;
+    --ciano:#25d0e0; --ambar:#ffb347; --verde:#3ddc84; --verde2:#1f7a4d;
+    --vermelho:#ff5d5d; --texto:#e8edf3; --cinza:#8b98a8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:
+    radial-gradient(1200px 500px at 50% -10%,#1a2230,#12161d 60%),var(--grafite);color:var(--texto);line-height:1.6;padding-bottom:60px}
+  header{background:linear-gradient(120deg,#0e2a30,#133b43);padding:26px 18px;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,.5);border-bottom:4px solid var(--ciano)}
+  header .selo{font-size:.78rem;letter-spacing:2px;color:#bfeef4;text-transform:uppercase}
+  header h1{font-size:1.5rem;margin:6px 0 2px}
+  header p{color:#cfe9ee;font-size:.92rem}
+  .wrap{max-width:820px;margin:0 auto;padding:16px}
+  .barra-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0}
+  .barra-nav a{background:var(--grafite2);color:var(--texto);text-decoration:none;padding:7px 12px;border-radius:20px;font-size:.85rem;border:1px solid var(--aco)}
+  .barra-nav a.on{background:var(--ciano);color:#04232a;font-weight:bold}
+  .intro{background:var(--grafite2);border:1px solid var(--aco);border-radius:14px;padding:16px;margin-bottom:16px}
+  .intro h2{color:var(--ciano);font-size:1.1rem;margin-bottom:8px}
+  .painel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:var(--grafite2);border:1px solid var(--aco);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:.85rem}
+  .painel .btns{display:flex;gap:6px;flex-wrap:wrap}
+  button{cursor:pointer;font-family:inherit}
+  .mini{background:var(--grafite);color:var(--texto);border:1px solid var(--aco2);border-radius:8px;padding:6px 10px;font-size:.8rem}
+  .mini:hover{background:#243040}
+  .prog{height:10px;background:var(--grafite2);border:1px solid var(--aco);border-radius:8px;overflow:hidden;margin-bottom:16px}
+  .prog i{display:block;height:100%;background:linear-gradient(90deg,var(--ciano),var(--verde));width:0;transition:width .3s}
+  .q{background:var(--grafite2);border:1px solid var(--aco);border-radius:14px;padding:16px;margin-bottom:16px}
+  .q .cab{display:flex;gap:10px;align-items:baseline;margin-bottom:10px}
+  .q .n{background:var(--ciano);color:#04232a;font-weight:bold;border-radius:8px;padding:2px 10px;font-size:.85rem;flex-shrink:0}
+  .q .enun{font-weight:600}
+  .opt{display:block;background:#141b25;border:1px solid var(--aco2);border-radius:10px;padding:10px 12px;margin:8px 0;cursor:pointer}
+  .opt:hover{background:#1b2634}
+  .opt.sel{border-color:var(--ciano);background:#122a30}
+  .opt .letra{font-weight:bold;color:var(--ciano);margin-right:6px}
+  .opt.certa{border-color:var(--verde);background:#0e2b1f}
+  .opt.errada{border-color:var(--vermelho);background:#2b1414;opacity:.9}
+  .exp{margin-top:8px;font-size:.88rem;background:#0e1a24;border-left:3px solid var(--ambar);padding:8px 11px;border-radius:0 8px 8px 0;display:none}
+  .exp.show{display:block}
+  .enviar{background:var(--verde);color:#04231a;border:none;border-radius:12px;padding:14px;font-size:1.05rem;font-weight:bold;width:100%;margin-top:6px}
+  .enviar:disabled{background:#223247;color:#6c7b8c;cursor:not-allowed}
+  .resultado{background:var(--grafite2);border:2px solid var(--ciano);border-radius:16px;padding:18px;margin:16px 0;text-align:center;display:none}
+  .resultado.show{display:block}
+  .resultado .nota{font-size:2rem;font-weight:bold;color:var(--ciano)}
+  .codigo{font-family:monospace;font-size:1.4rem;letter-spacing:2px;color:var(--ambar);background:#0a1017;border:1px dashed var(--ambar);border-radius:10px;padding:10px;margin:12px 0;display:inline-block}
+  .gabform{margin-top:10px}
+  .gabform input{background:#0a1017;border:1px solid var(--aco2);color:var(--texto);border-radius:8px;padding:9px;font-family:monospace;font-size:1rem;width:150px;text-transform:uppercase}
+  .rodape{text-align:center;color:var(--cinza);font-size:.8rem;margin-top:10px}
+  .prox{margin-top:16px;text-align:center}
+  .prox a{color:var(--ciano);text-decoration:none;font-weight:bold;background:var(--grafite2);border:1px solid var(--aco);padding:9px 16px;border-radius:20px}
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;align-items:center;justify-content:center;padding:16px}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--grafite2);border:1px solid var(--ciano);border-radius:14px;padding:20px;max-width:420px;text-align:center}
+  .modal p{margin-bottom:14px}
+  .modal button{background:var(--ciano);color:#04232a;border:none;border-radius:8px;padding:9px 16px;font-weight:bold}
+</style>
+</head>
+<body>
+<header>
+  <div class="selo">Oficina das Frases · Português 7º ano · CCF</div>
+  <h1>🎯 Quiz</h1>
+  <p>18 questões · Caps. 18 a 21 · Prova 08/10</p>
+</header>
+<div class="wrap">
+  <nav class="barra-nav">
+    <a href="leitura-guiada.html">📖 Leitura Guiada</a>
+    <a class="on" href="quiz.html">🎯 Quiz</a>
+    <a href="resumo.html">🗺️ Resumo</a>
+    <a href="simulado.html">📝 Simulado</a>
+    <a href="index.html">🏠 Início</a>
+  </nav>
+
+  <div class="intro">
+    <h2>🔧 Como funciona</h2>
+    <p>São <b>18 questões</b> de múltipla escolha. Responda <b>todas</b>, clique em <b>Enviar</b> e você recebe a nota e um <b>código de liberação</b> (MED-…). Digite o código para abrir o <b>gabarito comentado</b> (a resposta certa fica verde; as erradas, com explicação).</p>
+  </div>
+
+  <div class="painel">
+    <span id="salvo">💾 Progresso salvo automaticamente.</span>
+    <div class="btns">
+      <button class="mini" onclick="exportar()">📥 Exportar</button>
+      <button class="mini" onclick="document.getElementById('imp').click()">📤 Importar</button>
+      <input type="file" id="imp" accept="application/json" style="display:none" onchange="importar(event)">
+      <button class="mini" onclick="pedirZerar()">🗑️ Zerar tudo</button>
+    </div>
+  </div>
+
+  <div class="prog"><i id="progbar"></i></div>
+  <div id="quiz"></div>
+  <button class="enviar" id="btEnviar" onclick="enviar()" disabled>✔️ Enviar respostas</button>
+
+  <div class="resultado" id="resultado">
+    <div class="nota" id="nota"></div>
+    <p id="msg"></p>
+    <div class="codigo" id="codigo"></div>
+    <p style="font-size:.85rem;color:var(--cinza)">Mostre este código para um responsável. Ele serve para abrir o gabarito comentado.</p>
+    <div class="gabform">
+      <input id="inpCod" placeholder="MED-XX-YY" maxlength="9">
+      <button class="mini" onclick="abrirGab()">🔓 Abrir gabarito</button>
+    </div>
+    <p id="gaberro" style="color:var(--vermelho);font-size:.85rem;margin-top:6px"></p>
+  </div>
+
+  <div class="prox"><a href="resumo.html">➡️ Próximo: Resumo</a></div>
+  <div class="rodape">Feito com carinho para o jovem aprendiz. 🔧</div>
+</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <p id="modal-txt"></p>
+    <button onclick="fecharModal()" id="modal-ok">Ok</button>
+    <button class="mini" onclick="fecharModal()" id="modal-cancel" style="display:none;margin-left:8px">Cancelar</button>
+  </div>
+</div>
+
+<script>
+/* ===== QUESTÕES — opção [0] é SEMPRE a correta antes de embaralhar ===== */
+var QUESTOES=[
+ {q:"O adjunto adverbial é um termo que se liga ao verbo para…",
+  opts:[
+   {t:"ampliar o sentido do verbo, acrescentando uma circunstância (tempo, modo, lugar etc.).",c:true},
+   {t:"completar obrigatoriamente o sentido do verbo, sem o qual a oração não existe.",w:"Isso descreveria um complemento verbal (objeto). O adjunto é acessório: pode ser retirado."},
+   {t:"caracterizar um substantivo dentro do sujeito.",w:"Quem caracteriza um substantivo é o adjunto ADNOMINAL, não o adverbial."},
+   {t:"servir de núcleo do predicado nominal.",w:"O núcleo do predicado nominal é o predicativo (um nome), não o adjunto adverbial."}
+  ], why:"O adjunto adverbial amplia o verbo com uma circunstância e é um termo acessório."},
+
+ {q:"Em 'Os carros movem-se lentamente', o termo 'lentamente' é adjunto adverbial de:",
+  opts:[
+   {t:"modo.",c:true},
+   {t:"tempo.",w:"Tempo responderia 'quando' (ex.: hoje, ontem)."},
+   {t:"lugar.",w:"Lugar responderia 'onde' (ex.: longe daqui)."},
+   {t:"intensidade.",w:"Intensidade indicaria grau (ex.: demais, muito)."}
+  ], why:"'Lentamente' responde 'de que modo' os carros se movem → circunstância de modo."},
+
+ {q:"Qual frase contém um adjunto adverbial de NEGAÇÃO?",
+  opts:[
+   {t:"Não passe pela avenida central hoje.",c:true},
+   {t:"Talvez você não chegue a tempo.",w:"O adjunto aqui é 'talvez' (dúvida). O 'não' pertence à oração, mas a circunstância em destaque é a dúvida."},
+   {t:"Ele correu demais e bateu o carro.",w:"'Demais' é circunstância de intensidade."},
+   {t:"Visitou a cidade com toda a família.",w:"'Com toda a família' é circunstância de companhia."}
+  ], why:"'Não' é o adjunto adverbial de negação — a circunstância que mais se esquece de marcar."},
+
+ {q:"Sobre a POSIÇÃO do adjunto adverbial na oração, é correto afirmar que ele:",
+  opts:[
+   {t:"pode aparecer no começo, no meio ou no fim da frase, por ser um termo avulso.",c:true},
+   {t:"deve obrigatoriamente vir logo após o verbo.",w:"Não há posição fixa: ele é avulso e pode se deslocar."},
+   {t:"só pode aparecer no final da oração.",w:"Ele pode vir no início, no meio ou no fim."},
+   {t:"nunca pode iniciar uma oração.",w:"Pode sim: 'Ontem, vi um carro na esquina.'"}
+  ], why:"Por ser acessório/avulso, o adjunto adverbial circula pela frase sem mudar o essencial."},
+
+ {q:"(Adaptado do livro) As palavras 'cem' e 'sem', em 'entre cem pessoas', são um exemplo de palavras:",
+  opts:[
+   {t:"homófonas: têm o mesmo som, mas grafias e significados diferentes.",c:true},
+   {t:"parônimas: têm som apenas parecido, não igual.",w:"'Cem' e 'sem' têm pronúncia idêntica — por isso são homófonas, não parônimas."},
+   {t:"sinônimas: têm o mesmo significado.",w:"Elas têm significados bem diferentes (número × ausência)."},
+   {t:"homógrafas: têm a mesma escrita.",w:"A escrita é diferente (cem × sem); o que é igual é o som."}
+  ], why:"Mesmo som + escrita e sentido diferentes = homófonas (homo = mesmo, fono = som)."},
+
+ {q:"Assinale a dupla de palavras HOMÓFONAS:",
+  opts:[
+   {t:"cessão / sessão",c:true},
+   {t:"tráfego / tráfico",w:"São parônimas: o som é só parecido, não igual."},
+   {t:"docente / discente",w:"São parônimas (pronúncia parecida, não idêntica)."},
+   {t:"ratificar / retificar",w:"São parônimas (diferem no som: ra × re)."}
+  ], why:"'Cessão' e 'sessão' têm o mesmo som, com grafias e sentidos diferentes → homófonas."},
+
+ {q:"Em 'Ele é o responsável pela turma', o termo 'pela turma' é:",
+  opts:[
+   {t:"complemento nominal, pois completa o adjetivo 'responsável'.",c:true},
+   {t:"adjunto adverbial de lugar.",w:"Não indica circunstância de lugar; completa o sentido do adjetivo 'responsável'."},
+   {t:"objeto indireto do verbo 'é'.",w:"'É' é verbo de ligação e não pede objeto; o termo completa um nome."},
+   {t:"adjunto adnominal de 'turma'.",w:"Ele não caracteriza 'turma'; completa o nome 'responsável'."}
+  ], why:"Alguns nomes pedem complemento com preposição: 'responsável pela turma' → complemento nominal."},
+
+ {q:"O complemento nominal caracteriza-se por:",
+  opts:[
+   {t:"completar o sentido de um nome e vir sempre precedido de preposição.",c:true},
+   {t:"completar o sentido de um verbo, sem preposição.",w:"Isso é objeto direto, e ele se liga a um verbo, não a um nome."},
+   {t:"caracterizar um substantivo sem usar preposição.",w:"Isso descreve o adjunto adnominal; o CN sempre tem preposição."},
+   {t:"indicar uma circunstância de tempo ou modo.",w:"Circunstância é função do adjunto adverbial."}
+  ], why:"Complemento nominal = completa um nome e vem sempre com preposição."},
+
+ {q:"Qual é a diferença entre complemento nominal e objeto indireto?",
+  opts:[
+   {t:"O complemento nominal liga-se a um nome; o objeto indireto liga-se a um verbo.",c:true},
+   {t:"O complemento nominal nunca usa preposição; o objeto indireto sempre usa.",w:"Os dois usam preposição — a diferença é a que palavra se ligam."},
+   {t:"O complemento nominal liga-se a um verbo; o objeto indireto, a um nome.",w:"É o contrário: CN liga-se a nome; OI, a verbo."},
+   {t:"Não há diferença; são o mesmo termo com nomes diferentes.",w:"São termos distintos: um completa nome, o outro completa verbo."}
+  ], why:"Ambos têm preposição; o CN completa um NOME e o OI completa um VERBO."},
+
+ {q:"Em 'Nós precisamos de mais livros', o termo 'de mais livros' é:",
+  opts:[
+   {t:"objeto indireto, porque completa o verbo 'precisar'.",c:true},
+   {t:"complemento nominal, porque completa um nome.",w:"Aqui o termo completa o verbo 'precisar', não um nome."},
+   {t:"adjunto adverbial de quantidade.",w:"Não indica circunstância; é complemento do verbo."},
+   {t:"adjunto adnominal de 'livros'.",w:"'De mais livros' é todo o complemento do verbo, não um caracterizador de 'livros'."}
+  ], why:"'Precisar' é verbo que pede complemento com preposição → objeto indireto."},
+
+ {q:"O adjunto adnominal é o termo que:",
+  opts:[
+   {t:"especifica ou delimita o significado de um substantivo.",c:true},
+   {t:"completa o sentido de um verbo transitivo.",w:"Isso é um complemento verbal (objeto); o adnominal liga-se a um substantivo."},
+   {t:"indica uma circunstância ligada ao verbo.",w:"Circunstância ligada ao verbo é o adjunto adverbial."},
+   {t:"funciona como núcleo do sujeito.",w:"O núcleo do sujeito é o substantivo; o adjunto adnominal apenas o caracteriza."}
+  ], why:"Adjunto adnominal especifica/delimita um substantivo (artigo, adjetivo, numeral etc.)."},
+
+ {q:"Em 'As grandes cidades modernas', os termos 'as', 'grandes' e 'modernas' são:",
+  opts:[
+   {t:"adjuntos adnominais do núcleo 'cidades'.",c:true},
+   {t:"complementos nominais de 'cidades'.",w:"Eles não completam o nome com preposição; eles o caracterizam."},
+   {t:"adjuntos adverbiais.",w:"Não se ligam a um verbo nem indicam circunstância."},
+   {t:"predicativos do sujeito.",w:"Não há verbo de ligação atribuindo estado; eles caracterizam o substantivo diretamente."}
+  ], why:"Artigo ('as') e adjetivos ('grandes', 'modernas') que caracterizam o substantivo são adjuntos adnominais."},
+
+ {q:"Qual classe de palavra NÃO costuma exercer a função de adjunto adnominal?",
+  opts:[
+   {t:"verbo de ligação.",c:true},
+   {t:"adjetivo.",w:"O adjetivo é o caso mais comum de adjunto adnominal."},
+   {t:"artigo.",w:"O artigo também é adjunto adnominal (ex.: 'a' cidade)."},
+   {t:"numeral.",w:"O numeral pode ser adjunto adnominal (ex.: 'três' quilômetros)."}
+  ], why:"Adjunto adnominal pode ser artigo, adjetivo, locução adjetiva, pronome adjetivo, numeral ou oração — não um verbo de ligação."},
+
+ {q:"(Substantivos abstratos) Em 'A explicação do morador não tinha fundamento', 'do morador' é:",
+  opts:[
+   {t:"adjunto adnominal, pois indica o agente (quem explica).",c:true},
+   {t:"complemento nominal, pois indica o alvo da explicação.",w:"'Do morador' indica QUEM explica (agente), não quem recebe."},
+   {t:"objeto indireto do verbo 'tinha'.",w:"'Do morador' liga-se ao nome 'explicação', não ao verbo."},
+   {t:"adjunto adverbial de causa.",w:"Não indica circunstância; caracteriza o nome 'explicação'."}
+  ], why:"Quando o termo indica o AGENTE da ação do substantivo abstrato, é adjunto adnominal."},
+
+ {q:"Em 'A explicação ao morador foi clara', o termo 'ao morador' é:",
+  opts:[
+   {t:"complemento nominal, pois indica o alvo (quem recebe a explicação).",c:true},
+   {t:"adjunto adnominal, pois indica o agente.",w:"'Ao morador' indica quem RECEBE (alvo), não quem faz a ação."},
+   {t:"objeto indireto.",w:"Liga-se ao nome 'explicação', e não a um verbo."},
+   {t:"adjunto adverbial de companhia.",w:"Não indica circunstância; completa o nome 'explicação'."}
+  ], why:"Quando o termo indica o ALVO/receptor da ação do substantivo abstrato, é complemento nominal."},
+
+ {q:"Em qual frase o termo destacado é PREDICATIVO DO OBJETO (e não adjunto adnominal)?",
+  opts:[
+   {t:"O prefeito considerou a obra importante.",c:true},
+   {t:"O prefeito iniciou a obra importante.",w:"Aqui 'importante' caracteriza a obra como algo próprio dela → adjunto adnominal."},
+   {t:"Encontramos o livro de Ciências na prateleira.",w:"'De Ciências' caracteriza o livro → adjunto adnominal (locução adjetiva)."},
+   {t:"As grandes cidades adotam novas políticas.",w:"'Grandes' e 'novas' caracterizam substantivos → adjuntos adnominais."}
+  ], why:"Com 'considerar' há um julgamento atribuído ao objeto → predicativo do objeto; já 'iniciou a obra importante' traz característica própria → adjunto adnominal."},
+
+ {q:"(Interpretação — Cap. 20) A ideia central do texto 'Como serão as cidades no futuro' é que:",
+  opts:[
+   {t:"as cidades crescem e enfrentam problemas, e a tecnologia tem ajudado a torná-las mais inteligentes.",c:true},
+   {t:"as cidades do futuro terão carros voadores e robôs domésticos em 30 anos.",w:"O texto cita isso como imaginação popular e diz que 'provavelmente não' será assim."},
+   {t:"a tecnologia é inútil para resolver os problemas urbanos.",w:"O texto defende o contrário: a tecnologia ajuda as cidades."},
+   {t:"as grandes cidades devem ser abandonadas.",w:"O texto não propõe abandonar as cidades, e sim torná-las mais inteligentes."}
+  ], why:"O texto mostra que a tecnologia ajuda as metrópoles a vencer problemas de trânsito, segurança e urbanismo."},
+
+ {q:"(Interpretação — Cap. 20) No texto, a fala de Saskia Sassen de que Masdar 'é um experimento caro, que poucos serão capazes de replicar' é:",
+  opts:[
+   {t:"uma opinião, pois é um julgamento da especialista sobre o projeto.",c:true},
+   {t:"um fato comprovado por dados do texto.",w:"É uma avaliação pessoal da especialista, não um dado medido."},
+   {t:"uma circunstância de tempo.",w:"Não tem relação com classificação sintática; trata-se de opinião × fato."},
+   {t:"uma definição de 'cidade inteligente'.",w:"Não define o conceito; emite um juízo sobre o custo do projeto."}
+  ], why:"Quando um especialista avalia ('é caro', 'poucos conseguem'), trata-se de opinião, não de fato."}
+];
+
+/* ===== EMBARALHAMENTO (mulberry32, semente fixa) ===== */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+var SEED=20261008;
+function embaralhar(arr,rng){arr=arr.slice();for(var i=arr.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
+
+var ORDEM=[]; // para cada questão, array de opções embaralhadas (com flag c)
+(function(){
+  var rng=mulberry32(SEED);
+  QUESTOES.forEach(function(q){ ORDEM.push(embaralhar(q.opts,rng)); });
+})();
+
+/* ===== ESTADO ===== */
+var CHAVE='oficina_frases_quiz_v1';
+var mem={};
+var estado=carregar();
+function carregar(){try{var s=localStorage.getItem(CHAVE);if(s)return JSON.parse(s);}catch(e){if(mem[CHAVE])return JSON.parse(mem[CHAVE]);}return{resp:{},enviado:false,codigo:'',gaberto:false};}
+function salvar(){var s=JSON.stringify(estado);try{localStorage.setItem(CHAVE,s);}catch(e){mem[CHAVE]=s;}var d=new Date();document.getElementById('salvo').textContent='💾 Salvo às '+d.toLocaleTimeString('pt-BR');}
+
+function render(){
+  var cont=document.getElementById('quiz');cont.innerHTML='';
+  QUESTOES.forEach(function(q,i){
+    var div=document.createElement('div');div.className='q';
+    var h='<div class="cab"><span class="n">'+(i+1)+'</span><span class="enun">'+q.q+'</span></div>';
+    ORDEM[i].forEach(function(o,k){
+      var letra=String.fromCharCode(97+k);
+      var sel=(estado.resp[i]===k)?' sel':'';
+      var cls='';
+      if(estado.gaberto){ if(o.c)cls=' certa'; else if(estado.resp[i]===k)cls=' errada'; }
+      h+='<div class="opt'+sel+cls+'" onclick="escolher('+i+','+k+')"><span class="letra">'+letra+')</span>'+o.t+'</div>';
+    });
+    if(estado.gaberto){
+      h+='<div class="exp show"><b>Por quê:</b> '+q.why;
+      ORDEM[i].forEach(function(o,k){ if(!o.c && o.w){ h+='<br><span style="color:var(--cinza)">'+String.fromCharCode(97+k)+') '+o.w+'</span>'; } });
+      h+='</div>';
+    }
+    div.innerHTML=h;cont.appendChild(div);
+  });
+  atualizarProg();
+  if(estado.enviado) mostrarResultado();
+}
+function escolher(i,k){ if(estado.enviado) return; estado.resp[i]=k; salvar(); render(); }
+function atualizarProg(){
+  var n=Object.keys(estado.resp).length;
+  document.getElementById('progbar').style.width=(n/QUESTOES.length*100)+'%';
+  document.getElementById('btEnviar').disabled=(n<QUESTOES.length)||estado.enviado;
+}
+function contarAcertos(){var c=0;QUESTOES.forEach(function(q,i){if(ORDEM[i][estado.resp[i]]&&ORDEM[i][estado.resp[i]].c)c++;});return c;}
+function gerarCodigo(ac){
+  var L="ABCDEFGHJKLMNPQRSTUVWXYZ";var rng=mulberry32(SEED+ac+1);
+  var a=L[Math.floor(rng()*L.length)],b=L[Math.floor(rng()*L.length)];
+  return 'MED-'+(ac<10?'0'+ac:ac)+'-'+a+b;
+}
+function enviar(){
+  if(Object.keys(estado.resp).length<QUESTOES.length){mostrarModal('Responda todas as questões antes de enviar.',false);return;}
+  estado.enviado=true;var ac=contarAcertos();estado.codigo=gerarCodigo(ac);salvar();render();
+  document.getElementById('resultado').scrollIntoView({behavior:'smooth'});
+}
+function mostrarResultado(){
+  var ac=contarAcertos();
+  document.getElementById('resultado').classList.add('show');
+  document.getElementById('nota').textContent=ac+' / '+QUESTOES.length;
+  var pc=Math.round(ac/QUESTOES.length*100);
+  document.getElementById('msg').textContent=pc>=70?'Muito bem! Você está no caminho certo. 🔧':'Continue treinando — revise o Resumo e tente de novo!';
+  document.getElementById('codigo').textContent=estado.codigo;
+  document.getElementById('btEnviar').disabled=true;
+}
+function abrirGab(){
+  var v=(document.getElementById('inpCod').value||'').trim().toUpperCase();
+  if(v===estado.codigo){estado.gaberto=true;salvar();render();document.getElementById('gaberro').textContent='';}
+  else{document.getElementById('gaberro').textContent='Código incorreto. Confira as letras e números.';}
+}
+
+/* exportar/importar/zerar */
+function exportar(){var b=new Blob([JSON.stringify(estado,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='quiz_oficina-frases.json';a.click();}
+function importar(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{estado=JSON.parse(r.result);if(!estado.resp)estado.resp={};salvar();render();mostrarModal('✅ Progresso importado!',false);}catch(e){mostrarModal('❌ Arquivo inválido.',false);}};r.readAsText(f);}
+var acaoZerar=null;
+function pedirZerar(){acaoZerar=true;mostrarModal('Apagar todo o progresso deste quiz?',true);}
+function mostrarModal(txt,confirmar){document.getElementById('modal-txt').innerHTML=txt;document.getElementById('modal').classList.add('show');document.getElementById('modal-cancel').style.display=confirmar?'inline-block':'none';document.getElementById('modal-ok').textContent=confirmar?'Sim, apagar':'Ok';document.getElementById('modal-ok').onclick=function(){if(confirmar&&acaoZerar){estado={resp:{},enviado:false,codigo:'',gaberto:false};salvar();render();}acaoZerar=null;fecharModal();};}
+function fecharModal(){document.getElementById('modal').classList.remove('show');}
+
+render();
+</script>
+</body>
+</html>
